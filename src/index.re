@@ -55,7 +55,7 @@ let attractionTarget = Vec2d.create(100.0, 300.0);
 
 let attractionRadiusSquared = 10.0 *. 10.0;
 
-let attraction = (body: Body.body, dt, index) => {
+let attraction = (body: Body.body, _dt, index) => {
   let strength = 100.0 *. float_of_int(index + 1);
   let delta = Vec2d.origin();
 
@@ -75,12 +75,8 @@ let attraction = (body: Body.body, dt, index) => {
 
 };
 
-let world: World.worldState = {
-  accumulatedTime: 0.0,
-  clock: 0.0,
-  maxSteps: 1,
-  timestep: 0.0,
-  bodies: List.map(
+let bodies =
+  List.map(
     (_i) =>
       Body.create(
         10.0,
@@ -92,14 +88,15 @@ let world: World.worldState = {
         [attraction]
       ),
     range(0, 10)
-  ),
-};
+  );
+
+let physics = Physics.create();
 
 let rec asyncLoop = () => {
   attractionTarget.x = getMouseX();
   attractionTarget.y = getMouseY();
-  World.step(world);
-  render(world.bodies);
+  Physics.step(physics, bodies);
+  render(bodies);
   requestAnimationFrame(asyncLoop);
 };
 

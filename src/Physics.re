@@ -1,15 +1,18 @@
 [@bs.val] [@bs.scope "Date"]
 external now : unit => float = "now";
 
-type worldState = {
+type physicsState = {
   mutable accumulatedTime: float,
   mutable clock: float,
-  mutable maxSteps: int,
-  mutable timestep: float,
-  mutable bodies: list(Body.body),
 };
 
+let maxSteps = 4;
 let timestep =  1.0 /. 60.0;
+
+let create = () => {
+  accumulatedTime: 0.0,
+  clock: 0.0,
+};
 
 let integrateMotion = (bodies, dt, drag) => {
   let newPosition = Vec2d.origin();
@@ -45,7 +48,7 @@ let integrateMotion = (bodies, dt, drag) => {
   );
 };
 
-let integrateWorld = (bodies, dt, drag) => {
+let integrateBodies = (bodies, dt, drag) => {
     List.iteri((index, body) => {
       Body.update(body, dt, index);
     }, bodies);
@@ -53,15 +56,15 @@ let integrateWorld = (bodies, dt, drag) => {
     integrateMotion(bodies, dt, drag);
 };
 
-let step = (world: worldState) => {
+let step = (physics: physicsState, bodies: list(Body.body)) => {
     /* Initialise the clock on first step. */
-    if (world.clock == 0.0) {
-      world.clock = now();
+    if (physics.clock == 0.0) {
+      physics.clock = now();
     };
 
     /* Compute delta time since last step. */
     let time = now();
-    let delta = time -. world.clock;
+    let delta = time -. physics.clock;
 
     /* sufficient change. */
     if (delta > 0.0) {
@@ -73,21 +76,21 @@ let step = (world: worldState) => {
       let drag = 1.0 -. viscosity;
 
       /* Update the clock. */
-      world.clock = time;
+      physics.clock = time;
 
       /* Increment time accumulatedTime. */
-      world.accumulatedTime = world.accumulatedTime +. delta;
+      physics.accumulatedTime = physics.accumulatedTime +. delta;
 
       /* Integrate until the accumulatedTime is empty or until the */
       /* maximum amount of iterations per step is reached. */
 
       let i = ref(0);
-      while (world.accumulatedTime >= timestep && i^ < world.maxSteps) {
-        /* Integrate motion by fixed timestep. */
-        integrateWorld(world.bodies, timestep, drag);
+      while (physics.accumulatedTime >= timestep && i^ < maxSteps) {
+        /* Integrate bodies by fixed timestep. */
+        integrateBodies(bodies, timestep, drag);
 
         /* Reduce accumulatedTime by one timestep. */
-        world.accumulatedTime = world.accumulatedTime -. timestep;
+        physics.accumulatedTime = physics.accumulatedTime -. timestep;
         i := i^ + 1;
       };
     };
