@@ -1,21 +1,31 @@
 {
-  "name": "phys_re",
+  "name": "reason-physics",
   "version": "0.1.0",
-  "private": true,
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --open",
+    "webpack": "webpack -w",
+    "webpack:production": "NODE_ENV=production webpack"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "reason-scripts": "0.8.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "prepare": "npm link bs-platform"
+    "reason-react": ">=0.4.0"
   },
   "devDependencies": {
-    "bs-jest": "^0.2.0",
-    "reason-react": "^0.3.0"
+    "bs-platform": "^3.1.5",
+    "bsb-js": "^1.1.6",
+    "parcel": "^1.9.7",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10",
+    "webpack-dev-server": "^3.1.5"
   }
 }
