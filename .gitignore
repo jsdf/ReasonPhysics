@@ -29,3 +29,6 @@ yarn-error.log*
 .cache
 dist
 *.bs.js
+*.code-workspace
+.vscode
+.bsb.lock
