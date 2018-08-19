@@ -4,7 +4,7 @@ let start = () => {
   let demoState = Demo.init_state();
   let attractionRadiusSquared = 10.0 *. 10.0;
   let attraction = (body: Body.body, _dt, index) => {
-    let strength = 100.0 +. float_of_int(index + 1) *. 2.0;
+    let strength = 1.0 +. float_of_int(index + 1) *. 0.1;
     let delta = Vec2d.origin();
     /* Vector pointing from body to target. */
     Vec2d.copy(delta, demoState.mousePos);
@@ -22,7 +22,7 @@ let start = () => {
       attraction(body, dt, index)
     };
   let gravity = (body: Body.body, _dt, _index) =>
-    Vec2d.add(body.acceleration, Vec2d.create(0.0, 980.0 *. body.mass));
+    Vec2d.add(body.acceleration, Vec2d.create(0.0, 98.0 *. body.mass));
   let maybeGravity = (body: Body.body, dt, index) =>
     if (! demoState.attraction) {
       gravity(body, dt, index)
@@ -78,5 +78,6 @@ let start = () => {
       </div>,
       "root"
     );
-  Demo.startLoop((demoState, render, bodies))
+  let physics = Physics.create(0.05);
+  Demo.startLoop((demoState, render, bodies, physics))
 };

@@ -23,9 +23,7 @@ let updateInputs = (demoState) => {
   demoState.windowBounds.y = innerHeight
 };
 
-let startLoop = ((demoState, render, bodies)) => {
-  let physics = Physics.create();
-
+let startLoop = ((demoState, render, bodies, physics)) => {
   Renderer.renderLoop(() => {
     updateInputs(demoState);
     Physics.step(physics, bodies);

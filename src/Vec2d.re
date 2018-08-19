@@ -38,7 +38,7 @@ let clear = (vector) => {
 
 let magSq = (vector) => vector.x *. vector.x +. vector.y *. vector.y;
 
-let mag = (vector) => sqrt(magSq(vector));
+let mag = (vector) => sqrt(vector.x *. vector.x +. vector.y *. vector.y);
 
 let norm = (vector) => {
   let m = sqrt(vector.x *. vector.x +. vector.y *. vector.y);

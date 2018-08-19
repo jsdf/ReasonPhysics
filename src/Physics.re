@@ -2,18 +2,18 @@
 
 type physicsState = {
   mutable accumulatedTime: float,
-  mutable clock: float
+  mutable clock: float,
+  mutable viscosity: float
 };
 
 let maxSteps = 4;
 
 let timestep = 1.0 /. 60.0;
 
-let create = () => {accumulatedTime: 0.0, clock: 0.0};
+let create = (viscosity: float) => {accumulatedTime: 0.0, clock: 0.0, viscosity};
 
 let integrateMotion = (bodies, dt, drag) => {
   let newPosition = Vec2d.origin();
-  let dtSquared = dt *. dt;
   Array.iteri(
     (_i, body: Body.body) => {
       /* Scale force to mass. */
@@ -24,17 +24,21 @@ let integrateMotion = (bodies, dt, drag) => {
       /* Apply friction. */
       Vec2d.scale(body.velocity, drag);
       /* Apply acceleration force to new position. */
-      Vec2d.copy(newPosition, body.position);
       /* Get integral acceleration, apply to velocity, then apply updated
          velocity to position */
-      Vec2d.scale(body.acceleration, dtSquared);
+      Vec2d.copy(newPosition, body.position);
+      Vec2d.scale(body.acceleration, dt);
       Vec2d.add(body.velocity, body.acceleration);
       Vec2d.add(newPosition, body.velocity);
       /* Store old position, update position to new position. */
       Vec2d.copy(body.prevPosition, body.position);
       Vec2d.copy(body.position, newPosition);
       /* Reset acceleration force. */
-      Vec2d.clear(body.acceleration)
+      Vec2d.copy(body.prevAcceleration, body.acceleration);
+      Vec2d.clear(body.acceleration);
+      /* store velocity for use in acc calculations by user code */
+      Vec2d.copy(body.nonIntegralVelocity, body.velocity);
+      Vec2d.scale(body.nonIntegralVelocity, 1.0 /. dt)
     },
     bodies
   )
@@ -57,9 +61,8 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
   if (delta > 0.0) {
     /* Convert time to seconds. */
     let delta = delta *. 0.001;
-    let viscosity = 0.005;
     /* Drag is inversely proportional to viscosity. */
-    let drag = 1.0 -. viscosity;
+    let drag = 1.0 -. physics.viscosity;
     /* Update the clock. */
     physics.clock = time;
     /* Increment time accumulatedTime. */

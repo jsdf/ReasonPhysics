@@ -1,6 +1,5 @@
-
 [@bs.val] [@bs.scope "window"] external requestAnimationFrame : (unit => unit) => unit =
-"requestAnimationFrame";
+  "requestAnimationFrame";
 
 let pad = (s, length: int) => " " ++ s ++ String.make(length - String.length(s) + 1, ' ');
 
@@ -23,7 +22,7 @@ let renderBodiesDebugText = (bodies: array(Body.body)) =>
                 pad(string_of_int(i) ++ ":", 4),
                 formatVec(body.position, 20),
                 formatVec(body.velocity, 20),
-                formatVec(body.acceleration, 20)
+                formatVec(body.prevAcceleration, 20)
               )
             ),
           bodies
@@ -72,13 +71,10 @@ let drawBodies = (bodies: array(Body.body)) =>
     )
   </div>;
 
-
-
 let renderLoop = (render) => {
   let rec asyncLoop = () => {
     render();
     requestAnimationFrame(asyncLoop)
   };
-
-  asyncLoop();
+  asyncLoop()
 };

@@ -9,6 +9,11 @@ body {
   box-sizing: border-box;
 }
 
+.demo {
+  width: 100vw;
+  height: 100vh;
+}
+
 .ball {
   border-radius: 100%;
   text-align: center;
