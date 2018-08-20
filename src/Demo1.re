@@ -1,5 +1,7 @@
 [@bs.val] [@bs.scope "Math"] external random : unit => float = "random";
 
+let nBodies = 1;
+
 let start = () => {
   let demoState = Demo.init_state();
   let attractionRadiusSquared = 10.0 *. 10.0;
@@ -39,7 +41,7 @@ let start = () => {
             ~position=Vec2d.create(random() *. 600.0, random() *. 600.0),
             ~behaviours=[maybeAttraction, maybeGravity, edgeBounce]
           ),
-        Demo.range(0, 10)
+        Demo.range(0, nBodies - 1)
       )
     );
   let collision = Behaviour.collision(bodies);
@@ -79,5 +81,5 @@ let start = () => {
       "root"
     );
   let physics = Physics.create(0.05);
-  Demo.startLoop((demoState, render, bodies, physics))
+  Demo.startLoop(demoState, render, bodies, physics)
 };
