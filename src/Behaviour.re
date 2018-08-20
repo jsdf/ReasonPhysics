@@ -18,22 +18,21 @@ let attraction = (~target: Vec2d.vec2d, ~radius: float, ~strength: float) => {
 };
 
 let edgeBounce = (~min: Vec2d.vec2d, ~max: Vec2d.vec2d, body: Body.body, _dt, _index) => {
-  let opposite = (-1.0);
+  /* failwith("die"); */
+  let opposite = (-1.0) *. body.mass;
   if (body.position.x -. body.radius < min.x) {
     body.position.x = min.x +. body.radius;
-    body.acceleration.x = body.nonIntegralVelocity.x *. opposite
+    Vec2d.add(body.acceleration, Vec2d.create(body.nonIntegralVelocity.x *. opposite, 0.0))
   } else if (body.position.x +. body.radius > max.x) {
     body.position.x = max.x -. body.radius;
-    body.acceleration.x = body.nonIntegralVelocity.x *. opposite
+    Vec2d.add(body.acceleration, Vec2d.create(body.nonIntegralVelocity.x *. opposite, 0.0))
   };
   if (body.position.y -. body.radius < min.y) {
     body.position.y = min.y +. body.radius;
-    body.acceleration.y = body.nonIntegralVelocity.y *. opposite;
-    Js.log2("hit top, set acc to ", body.nonIntegralVelocity.y *. opposite)
+    Vec2d.add(body.acceleration, Vec2d.create(0.0, body.nonIntegralVelocity.y *. opposite))
   } else if (body.position.y +. body.radius > max.y) {
     body.position.y = max.y -. body.radius;
-    body.acceleration.y = body.nonIntegralVelocity.y *. opposite *. body.mass;
-    Js.log3("hit bottom, set acc from to ", body.nonIntegralVelocity.y, body.acceleration.y);
+    Vec2d.add(body.acceleration, Vec2d.create(0.0, body.nonIntegralVelocity.y *. opposite));
     [%bs.debugger]
   }
 };
@@ -59,39 +58,38 @@ let collision = (pool: array(Body.body)) => {
   (body: Body.body, _dt, _index) => {
     let length = Array.length(pool);
     let j = ref(0);
-    while (j^ < length)
-      {
-        let otherBody = pool[j^];
-        j := j^ + 1;
-        if (body != otherBody) {
-          Vec2d.copy(delta, otherBody.position);
-          Vec2d.sub(delta, body.position);
-          let distanceSquared = Vec2d.magSq(delta);
-          Vec2d.copy(direction, delta);
-          Vec2d.norm(direction);
-          let radii = body.radius +. otherBody.radius;
-          if (distanceSquared <= radii *. radii) {
-            let distance = sqrt(distanceSquared);
-            let overlap = radii -. distance -. 0.5;
-            /* Total mass. */
-            let mt = body.mass +. otherBody.mass;
-            /* Distribute collision responses. */
-            let bodySeparationForce = body.mass /. mt;
-            let otherBodySeparationForce = otherBody.mass /. mt;
-            /* Move particles so they no longer overlap.*/
-            Vec2d.add(
-              body.position,
-              collisionSeparationOffset(Vec2d.clone(delta), overlap, -. bodySeparationForce)
-            );
-            Vec2d.add(
-              otherBody.position,
-              collisionSeparationOffset(Vec2d.clone(delta), overlap, otherBodySeparationForce)
-            )
-          }
+    while (j^ < length) {
+      let otherBody = pool[j^];
+      j := j^ + 1;
+      if (body != otherBody) {
+        Vec2d.copy(delta, otherBody.position);
+        Vec2d.sub(delta, body.position);
+        let distanceSquared = Vec2d.magSq(delta);
+        Vec2d.copy(direction, delta);
+        Vec2d.norm(direction);
+        let radii = body.radius +. otherBody.radius;
+        if (distanceSquared <= radii *. radii) {
+          let distance = sqrt(distanceSquared);
+          let overlap = radii -. distance -. 0.5;
+          /* Total mass. */
+          let mt = body.mass +. otherBody.mass;
+          /* Distribute collision responses. */
+          let bodySeparationForce = body.mass /. mt;
+          let otherBodySeparationForce = otherBody.mass /. mt;
+          /* Move particles so they no longer overlap.*/
+          Vec2d.add(
+            body.position,
+            collisionSeparationOffset(Vec2d.clone(delta), overlap, -. bodySeparationForce)
+          );
+          Vec2d.add(
+            otherBody.position,
+            collisionSeparationOffset(Vec2d.clone(delta), overlap, otherBodySeparationForce)
+          )
         }
       }
-      /* apply normal forces */
-      /* Vec2d.add(body.acceleration, ) */
+    }
+    /* apply normal forces */
+    /* Vec2d.add(body.acceleration, ) */
     /*
      let restitutionToUse = if (body.restitution > otherBody.restitution) {
       body.restitution;
