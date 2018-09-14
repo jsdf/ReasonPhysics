@@ -32,8 +32,7 @@ let edgeBounce = (~min: Vec2d.vec2d, ~max: Vec2d.vec2d, body: Body.body, _dt, _i
     Vec2d.add(body.acceleration, Vec2d.create(0.0, body.nonIntegralVelocity.y *. opposite))
   } else if (body.position.y +. body.radius > max.y) {
     body.position.y = max.y -. body.radius;
-    Vec2d.add(body.acceleration, Vec2d.create(0.0, body.nonIntegralVelocity.y *. opposite));
-    [%bs.debugger]
+    Vec2d.add(body.acceleration, Vec2d.create(0.0, body.nonIntegralVelocity.y *. opposite))
   }
 };
 

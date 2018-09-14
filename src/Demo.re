@@ -27,7 +27,7 @@ let startLoop = (demoState, render, bodies, physics) => {
   Renderer.renderLoop(() => {
     updateInputs(demoState);
     Physics.step(physics, bodies);
-    render(bodies, demoState);
+    render(bodies, demoState, physics);
   });
 }
 

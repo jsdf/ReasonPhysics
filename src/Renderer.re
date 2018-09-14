@@ -31,6 +31,42 @@ let renderBodiesDebugText = (bodies: array(Body.body)) =>
     )
   </pre>;
 
+let positionDebugItems: array(ReasonReact.reactElement) = [||];
+
+let drawPositionDebug = (bodies: array(Body.body)) => {
+  /*add new position react elements*/
+  Array.iteri(
+    (i, body: Body.body) =>
+      Js.Array.push(
+        <div
+          key=(string_of_int(Array.length(positionDebugItems)))
+          className="debugtext"
+          style=(
+            ReactDOMRe.Style.make(
+              ~position="absolute",
+              ~transform=
+                "translate("
+                ++ string_of_float(body.position.x -. body.radius)
+                ++ "px"
+                ++ ", "
+                ++ string_of_float(body.position.y -. body.radius)
+                ++ "px"
+                ++ ")",
+              ()
+            )
+          )>
+          (ReasonReact.string(string_of_int(i) ++ ": " ++ formatVec(body.position, 20)))
+        </div>,
+        positionDebugItems
+      )
+      |> ignore,
+    bodies
+  );
+  <div style=(ReactDOMRe.Style.make(~position="absolute", ()))>
+    (ReasonReact.array(positionDebugItems))
+  </div>
+};
+
 let drawBodies = (bodies: array(Body.body)) =>
   <div style=(ReactDOMRe.Style.make(~position="absolute", ()))>
     (

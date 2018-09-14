@@ -3,14 +3,22 @@
 type physicsState = {
   mutable accumulatedTime: float,
   mutable clock: float,
-  mutable viscosity: float
+  mutable viscosity: float,
+  mutable timeScale: float,
+  mutable realtime: bool
 };
 
 let maxSteps = 4;
 
 let timestep = 1.0 /. 60.0;
 
-let create = (viscosity: float) => {accumulatedTime: 0.0, clock: 0.0, viscosity};
+let create = (~viscosity: float) => {
+  accumulatedTime: 0.0,
+  clock: 0.0,
+  viscosity,
+  timeScale: 1.0,
+  realtime: true
+};
 
 let integrateMotion = (bodies, dt, drag) => {
   let newPosition = Vec2d.origin();
@@ -56,6 +64,8 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
   };
   /* Compute delta time since last step. */
   let time = now();
+  /* fixed delta for debugging */
+  let time = physics.realtime ? time : physics.clock +. 16.667 *. physics.timeScale;
   let delta = time -. physics.clock;
   /* sufficient change. */
   if (delta > 0.0) {
@@ -70,6 +80,7 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
     /* Integrate until the accumulatedTime is empty or until the */
     /* maximum amount of iterations per step is reached. */
     let i = ref(0);
+    let timestep = timestep *. physics.timeScale;
     while (physics.accumulatedTime >= timestep && i^ < maxSteps) {
       /* Integrate bodies by fixed timestep. */
       integrateBodies(bodies, timestep, drag);
