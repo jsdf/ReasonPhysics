@@ -20,3 +20,9 @@ body {
   vertical-align: middle;
   background-image: linear-gradient(72deg, cyan, magenta);
 }
+
+.debugtext {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 10px;
+  background: white;
+}
