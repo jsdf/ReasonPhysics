@@ -1,7 +1,9 @@
-[@bs.val] [@bs.scope "window"] external requestAnimationFrame : (unit => unit) => unit =
+[@bs.val] [@bs.scope "window"]
+external requestAnimationFrame: (unit => unit) => unit =
   "requestAnimationFrame";
 
-let pad = (s, length: int) => " " ++ s ++ String.make(length - String.length(s) + 1, ' ');
+let pad = (s, length: int) =>
+  " " ++ s ++ String.make(length - String.length(s) + 1, ' ');
 
 let formatVec = (vector: Vec2d.vec2d, padding: int) =>
   "x="
@@ -12,7 +14,7 @@ let formatVec = (vector: Vec2d.vec2d, padding: int) =>
 
 let renderBodiesDebugText = (bodies: array(Body.body)) =>
   <pre>
-    (
+    {
       ReasonReact.array(
         Array.mapi(
           (i, body: Body.body) =>
@@ -22,13 +24,13 @@ let renderBodiesDebugText = (bodies: array(Body.body)) =>
                 pad(string_of_int(i) ++ ":", 4),
                 formatVec(body.position, 20),
                 formatVec(body.velocity, 20),
-                formatVec(body.prevAcceleration, 20)
-              )
+                formatVec(body.prevAcceleration, 20),
+              ),
             ),
-          bodies
-        )
+          bodies,
+        ),
       )
-    )
+    }
   </pre>;
 
 let positionDebugItems: array(ReasonReact.reactElement) = [||];
@@ -39,9 +41,9 @@ let drawPositionDebug = (bodies: array(Body.body)) => {
     (i, body: Body.body) =>
       Js.Array.push(
         <div
-          key=(string_of_int(Array.length(positionDebugItems)))
+          key={string_of_int(Array.length(positionDebugItems))}
           className="debugtext"
-          style=(
+          style={
             ReactDOMRe.Style.make(
               ~position="absolute",
               ~transform=
@@ -52,30 +54,34 @@ let drawPositionDebug = (bodies: array(Body.body)) => {
                 ++ string_of_float(body.position.y -. body.radius)
                 ++ "px"
                 ++ ")",
-              ()
+              (),
             )
-          )>
-          (ReasonReact.string(string_of_int(i) ++ ": " ++ formatVec(body.position, 20)))
+          }>
+          {
+            ReasonReact.string(
+              string_of_int(i) ++ ": " ++ formatVec(body.position, 20),
+            )
+          }
         </div>,
-        positionDebugItems
+        positionDebugItems,
       )
       |> ignore,
-    bodies
+    bodies,
   );
-  <div style=(ReactDOMRe.Style.make(~position="absolute", ()))>
-    (ReasonReact.array(positionDebugItems))
-  </div>
+  <div style={ReactDOMRe.Style.make(~position="absolute", ())}>
+    {ReasonReact.array(positionDebugItems)}
+  </div>;
 };
 
 let drawBodies = (bodies: array(Body.body)) =>
-  <div style=(ReactDOMRe.Style.make(~position="absolute", ()))>
-    (
+  <div style={ReactDOMRe.Style.make(~position="relative", ())}>
+    {
       ReasonReact.array(
         Array.mapi(
           (i, body: Body.body) =>
             <div
-              key=(string_of_int(i))
-              style=(
+              key={string_of_int(i)}
+              style={
                 ReactDOMRe.Style.make(
                   ~position="absolute",
                   ~transform=
@@ -86,31 +92,31 @@ let drawBodies = (bodies: array(Body.body)) =>
                     ++ string_of_float(body.position.y -. body.radius)
                     ++ "px"
                     ++ ")",
-                  ()
+                  (),
                 )
-              )>
+              }>
               <div
                 className="ball"
-                style=(
+                style={
                   ReactDOMRe.Style.make(
                     ~width=string_of_float(2.0 *. body.radius) ++ "px",
                     ~height=string_of_float(2.0 *. body.radius) ++ "px",
-                    ()
+                    (),
                   )
-                )>
-                (ReasonReact.string(string_of_int(i)))
+                }>
+                {ReasonReact.string(string_of_int(i))}
               </div>
             </div>,
-          bodies
-        )
+          bodies,
+        ),
       )
-    )
+    }
   </div>;
 
-let renderLoop = (render) => {
+let renderLoop = render => {
   let rec asyncLoop = () => {
     render();
-    requestAnimationFrame(asyncLoop)
+    requestAnimationFrame(asyncLoop);
   };
-  asyncLoop()
+  asyncLoop();
 };

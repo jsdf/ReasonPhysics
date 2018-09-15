@@ -9,9 +9,26 @@ body {
   box-sizing: border-box;
 }
 
+button {
+  font-size: 13px;
+}
+
 .demo {
   width: 100vw;
   height: 100vh;
+  position: absolute;
+}
+
+.demo-controls {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.demo-info {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 .ball {
