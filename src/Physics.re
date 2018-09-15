@@ -4,8 +4,9 @@ type physicsState = {
   mutable accumulatedTime: float,
   mutable clock: float,
   mutable viscosity: float,
+  mutable simulationRate: float,
   mutable timeScale: float,
-  mutable realtime: bool
+  mutable dynamicTimestep: bool
 };
 
 let maxSteps = 4;
@@ -16,8 +17,9 @@ let create = (~viscosity: float) => {
   accumulatedTime: 0.0,
   clock: 0.0,
   viscosity,
+  simulationRate: 1.0,
   timeScale: 1.0,
-  realtime: true
+  dynamicTimestep: true
 };
 
 let integrateMotion = (bodies, dt, drag) => {
@@ -65,7 +67,9 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
   /* Compute delta time since last step. */
   let time = now();
   /* fixed delta for debugging */
-  let time = physics.realtime ? time : physics.clock +. 16.667 *. physics.timeScale;
+  let time =
+    physics.dynamicTimestep ?
+      time : physics.clock +. 16.667 *. physics.timeScale *. physics.simulationRate;
   let delta = time -. physics.clock;
   /* sufficient change. */
   if (delta > 0.0) {

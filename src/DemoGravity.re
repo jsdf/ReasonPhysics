@@ -2,24 +2,22 @@
 
 let nBodies = 10;
 
-let formatFloatForInput = (f) => {
-  let formatted = string_of_float(f);
-  if (Js_string.endsWith(".", formatted)) {
-    Js_string.slice(~from=0, ~to_=Js_string.length(formatted) - 1, formatted)
-  } else {
-    formatted
-  }
+let formatFloatForInput = (f) => Printf.sprintf("%.2f", f);
+ 
+let updateDynamicTimestepFlag = (physics: Physics.physicsState) => {
+  physics.dynamicTimestep = physics.timeScale == 1.0 && physics.simulationRate == 1.0;
 };
-
+  
 let renderControls =
     (bodies: array(Body.body), demoState: Demo.state, physics: Physics.physicsState) =>
   <div
-    style=(ReactDOMRe.Style.make(~position="absolute", ()))
-    onClick=((event) => ReactEvent.Mouse.stopPropagation(event))>
+    style=(ReactDOMRe.Style.make(~position="absolute", ~left="10px", ~top="10px", ()))>
     <div>
       <button onClick=((_event) => demoState.debug = ! demoState.debug)>
-        (ReasonReact.string("debug:" ++ (demoState.debug ? "on" : "off")))
+        (ReasonReact.string("debug bodies: " ++ (demoState.debug ? "on" : "off")))
       </button>
+    </div>
+    <div>
       <button onClick=((_event) => demoState.attraction = ! demoState.attraction)>
         (
           ReasonReact.string(
@@ -55,9 +53,8 @@ let renderControls =
             ~props=
               ReactDOMRe.objToDOMProps({
                 "type": "text",
-                "value": formatFloatForInput(physics.viscosity),
-                "onChange": (event) =>
-                  physics.viscosity = float_of_string(ReactEvent.Form.target(event)##value)
+                "readonly": true,
+                "value": formatFloatForInput(physics.viscosity), 
               }),
             [||]
           )
@@ -79,7 +76,7 @@ let renderControls =
                 "value": formatFloatForInput(physics.timeScale),
                 "onChange": (event) => {
                   physics.timeScale = float_of_string(ReactEvent.Form.target(event)##value);
-                  physics.realtime = physics.timeScale == 1.0
+                  updateDynamicTimestepFlag(physics);
                 }
               }),
             [||]
@@ -91,16 +88,53 @@ let renderControls =
             ~props=
               ReactDOMRe.objToDOMProps({
                 "type": "text",
-                "value": formatFloatForInput(physics.timeScale),
-                "onChange": (event) => {
-                  physics.timeScale = float_of_string(ReactEvent.Form.target(event)##value);
-                  physics.realtime = physics.timeScale == 1.0
-                }
+                "readonly": true,
+                "value": formatFloatForInput(physics.timeScale), 
               }),
             [||]
           )
         )
       </label>
+    </div>
+    <div> 
+
+
+      <label>
+        (ReasonReact.string("simulation rate: "))
+        (
+          ReactDOMRe.createElement(
+            "input",
+            ~props=
+              ReactDOMRe.objToDOMProps({
+                "type": "range",
+                "min": "0",
+                "max": "2.0",
+                "step": "0.1",
+                "value": formatFloatForInput(physics.simulationRate),
+                "onChange": (event) => {
+                  physics.simulationRate = float_of_string(ReactEvent.Form.target(event)##value);
+                  updateDynamicTimestepFlag(physics);
+                }
+              }),
+            [||]
+          )
+        )
+        (
+          ReactDOMRe.createElement(
+            "input",
+            ~props=
+              ReactDOMRe.objToDOMProps({
+                "type": "text",
+                "readonly": true,
+                "value": formatFloatForInput(physics.simulationRate)
+              }),
+            [||]
+          )
+        )
+      </label>
+      <div>
+      (ReasonReact.string("using dynamic timestep: " ++ (physics.dynamicTimestep ? "yes" : "no")))
+      </div>
     </div>
     (demoState.debug ? Renderer.renderBodiesDebugText(bodies) : ReasonReact.null)
   </div>;
@@ -151,9 +185,18 @@ let start = () => {
   Array.iter((body: Body.body) => body.behaviours = [collision, ...body.behaviours], bodies);
   let render = (bodies: array(Body.body), demoState: Demo.state, physics: Physics.physicsState) =>
     ReactDOMRe.renderToElementWithId(
-      <div onClick=((_event) => demoState.attraction = ! demoState.attraction) className="demo">
+      <div>
         /* (Renderer.drawPositionDebug(bodies)) */
-         (Renderer.drawBodies(bodies)) (renderControls(bodies, demoState, physics)) </div>,
+        <div onClick=((_event) => demoState.attraction = ! demoState.attraction) className="demo">
+          (Renderer.drawBodies(bodies))
+        </div>
+        (renderControls(bodies, demoState, physics))
+        <div style=(ReactDOMRe.Style.make(~position="absolute", ~right="10px", ~top="10px", ()))>
+          <a href="https://github.com/jsdf/ReasonPhysics">
+            (ReasonReact.string("source on github"))
+          </a>
+        </div>
+      </div>,
       "root"
     );
   let physics = Physics.create(~viscosity=0.02);
