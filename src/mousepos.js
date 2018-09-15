@@ -15,7 +15,7 @@ document.addEventListener("touchmove", function(event) {
 
 module.exports = {
   hasTouch() {
-    return ontouchstart in window;
+    return "ontouchstart" in window;
   },
   getMouseX() {
     return mousepos.x;
