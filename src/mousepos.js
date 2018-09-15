@@ -13,6 +13,16 @@ document.addEventListener("touchmove", function(event) {
   }
 });
 
+if ("ontouchstart" in window) {
+  document.addEventListener("touchstart", function(event) {
+    var firstTouch = event.touches[0];
+    if (firstTouch) {
+      mousepos.x = firstTouch.clientX;
+      mousepos.y = firstTouch.clientY;
+    }
+  });
+}
+
 module.exports = {
   hasTouch() {
     return "ontouchstart" in window;

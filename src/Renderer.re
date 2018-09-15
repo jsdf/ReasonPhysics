@@ -74,7 +74,9 @@ let drawPositionDebug = (bodies: array(Body.body)) => {
 };
 
 let drawBodies = (bodies: array(Body.body)) =>
-  <div style={ReactDOMRe.Style.make(~position="relative", ())}>
+  <div
+    style={ReactDOMRe.Style.make(~position="relative", ())}
+    onTouchStart={event => event->ReactEvent.Touch.preventDefault}>
     {
       ReasonReact.array(
         Array.mapi(
