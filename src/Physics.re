@@ -80,8 +80,12 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
     let drag = 1.0 -. physics.viscosity;
     /* Update the clock. */
     physics.clock = time;
-    /* Increment time accumulatedTime. */
-    if (physics.accumulatedTime < 2.0) {
+    /* Increment time accumulatedTime.
+       Don't accumulate any additional time if we're already more than 1 second behind.
+       This happens when the tab is backgrounded, and if this grows large enough we
+       won't be able to ever catch up.
+       */
+    if (physics.accumulatedTime < 1.0) {
       physics.accumulatedTime = physics.accumulatedTime +. delta;
     } else {
       Js.log("accumulated too much time, not accumulating any more");
