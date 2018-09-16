@@ -5,23 +5,17 @@ document.addEventListener("mousemove", function(event) {
   mousepos.y = event.clientY;
 });
 
-document.addEventListener("touchmove", function(event) {
+function handleTouch(event) {
   var firstTouch = event.touches[0];
   if (firstTouch) {
     mousepos.x = firstTouch.clientX;
     mousepos.y = firstTouch.clientY;
   }
-});
-
-if ("ontouchstart" in window) {
-  document.addEventListener("touchstart", function(event) {
-    var firstTouch = event.touches[0];
-    if (firstTouch) {
-      mousepos.x = firstTouch.clientX;
-      mousepos.y = firstTouch.clientY;
-    }
-  });
 }
+
+document.addEventListener("touchmove", handleTouch);
+
+document.addEventListener("touchstart", handleTouch);
 
 module.exports = {
   hasTouch() {
