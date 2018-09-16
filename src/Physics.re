@@ -1,4 +1,4 @@
-[@bs.val] [@bs.scope "Date"] external now : unit => float = "now";
+[@bs.val] [@bs.scope "Date"] external now: unit => float = "now";
 
 type physicsState = {
   mutable accumulatedTime: float,
@@ -6,7 +6,7 @@ type physicsState = {
   mutable viscosity: float,
   mutable simulationRate: float,
   mutable timeScale: float,
-  mutable dynamicTimestep: bool
+  mutable dynamicTimestep: bool,
 };
 
 let maxSteps = 4;
@@ -19,7 +19,7 @@ let create = (~viscosity: float) => {
   viscosity,
   simulationRate: 1.0,
   timeScale: 1.0,
-  dynamicTimestep: true
+  dynamicTimestep: true,
 };
 
 let integrateMotion = (bodies, dt, drag) => {
@@ -48,28 +48,29 @@ let integrateMotion = (bodies, dt, drag) => {
       Vec2d.clear(body.acceleration);
       /* store velocity for use in acc calculations by user code */
       Vec2d.copy(body.nonIntegralVelocity, body.velocity);
-      Vec2d.scale(body.nonIntegralVelocity, 1.0 /. dt)
+      Vec2d.scale(body.nonIntegralVelocity, 1.0 /. dt);
     },
-    bodies
-  )
+    bodies,
+  );
 };
 
 let integrateBodies = (bodies, dt, drag) => {
   Array.iteri((index, body) => Body.update(body, dt, index), bodies);
-  integrateMotion(bodies, dt, drag)
+  integrateMotion(bodies, dt, drag);
 };
 
 let step = (physics: physicsState, bodies: array(Body.body)) => {
   /* Initialise the clock on first step. */
   if (physics.clock == 0.0) {
-    physics.clock = now()
+    physics.clock = now();
   };
   /* Compute delta time since last step. */
   let time = now();
   /* fixed delta for debugging */
   let time =
     physics.dynamicTimestep ?
-      time : physics.clock +. 16.667 *. physics.timeScale *. physics.simulationRate;
+      time :
+      physics.clock +. 16.667 *. physics.timeScale *. physics.simulationRate;
   let delta = time -. physics.clock;
   /* sufficient change. */
   if (delta > 0.0) {
@@ -80,7 +81,11 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
     /* Update the clock. */
     physics.clock = time;
     /* Increment time accumulatedTime. */
-    physics.accumulatedTime = physics.accumulatedTime +. delta;
+    if (physics.accumulatedTime < 2.0) {
+      physics.accumulatedTime = physics.accumulatedTime +. delta;
+    } else {
+      Js.log("accumulated too much time, not accumulating any more");
+    };
     /* Integrate until the accumulatedTime is empty or until the */
     /* maximum amount of iterations per step is reached. */
     let i = ref(0);
@@ -90,7 +95,7 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
       integrateBodies(bodies, timestep, drag);
       /* Reduce accumulatedTime by one timestep. */
       physics.accumulatedTime = physics.accumulatedTime -. timestep;
-      i := i^ + 1
-    }
-  }
+      i := i^ + 1;
+    };
+  };
 };
