@@ -7,7 +7,7 @@
     "clean": "bsb -clean-world",
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "parcel public/index.html",
-    "prod": "rm docs/*; parcel build public/index.html --out-dir docs/ --public-url /ReasonPhysics/",
+    "prod": "parcel build public/index.html --out-dir docs/ --public-url /ReasonPhysics/",
     "pages": "yarn prod; git add -A; git commit -m 'update website'; git push origin master"
   },
   "keywords": [
