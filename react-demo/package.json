@@ -1,0 +1,28 @@
+{
+  "name": "reason-physics-react-demo",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "parcel public/index.html",
+    "prod": "rm docs/*; parcel build public/index.html --out-dir docs/ --public-url /ReasonPhysics/",
+    "pages": "yarn prod; git add -A; git commit -m 'update website'; git push origin master"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "reason-react": ">=0.4.0"
+  },
+  "devDependencies": {
+    "bs-platform": "^4.0.5",
+    "bsb-js": "^1.1.7",
+    "parcel": "^1.9.7"
+  }
+}

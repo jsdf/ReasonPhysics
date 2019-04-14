@@ -1,5 +1,3 @@
-[%%debugger.chrome];
-
 /* for now all bodies are circles. later we can make this a variant type which
    supports circle, rect, etc bodies */
 type body = {
@@ -15,7 +13,7 @@ type body = {
   nonIntegralVelocity: Vec2d.vec2d,
   acceleration: Vec2d.vec2d,
   prevAcceleration: Vec2d.vec2d,
-  mutable behaviours: list(behaviour)
+  mutable behaviours: list(behaviour),
 }
 and behaviour = (body, float, int) => unit;
 
@@ -32,15 +30,15 @@ let create = (~mass, ~radius, ~position, ~behaviours, ~id) => {
   nonIntegralVelocity: Vec2d.origin(),
   acceleration: Vec2d.origin(),
   prevAcceleration: Vec2d.origin(),
-  behaviours
+  behaviours,
 };
 
 /* run all the behaviours for this body for some delta time */
 let update = (body, dt, index) =>
   List.iter(
-    (behaviour) =>
+    behaviour =>
       /* Js.log2("acc before",body.acceleration.y); */
       behaviour(body, dt, index),
     /* Js.log2("acc after",body.acceleration.y); */
-    body.behaviours
+    body.behaviours,
   );

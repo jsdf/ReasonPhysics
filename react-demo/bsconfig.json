@@ -1,0 +1,21 @@
+{
+  "name": "reason-physics-react-demo",
+  "reason": {
+    "react-jsx": 2
+  },
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "package-specs": [
+    {
+      "module": "commonjs",
+      "in-source": true
+    }
+  ],
+  "suffix": ".bs.js",
+  "namespace": true,
+  "bs-dependencies": ["reason-react", "reason-physics"],
+  "bsc-flags": ["-bs-g"],
+  "refmt": 3
+}

@@ -1,0 +1,21 @@
+{
+  "name": "reason-physics",
+  "sources": {
+    "dir": "src",
+    "public": ["Behaviour", "Body", "Physics", "Vec2d"],
+    "subdirs": true
+  },
+  "package-specs": [
+    {
+      "module": "commonjs"
+    },
+    {
+      "module": "es6"
+    }
+  ],
+
+  "suffix": ".bs.js",
+  "namespace": true,
+  "bsc-flags": ["-bs-g"],
+  "refmt": 3
+}

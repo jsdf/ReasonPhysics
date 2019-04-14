@@ -1,4 +1,5 @@
 [@bs.val] [@bs.scope "Date"] external now: unit => float = "now";
+// let now = () => Unix.gettimeofday() *. 1000.0;
 
 type physicsState = {
   mutable accumulatedTime: float,
@@ -68,9 +69,9 @@ let step = (physics: physicsState, bodies: array(Body.body)) => {
   let time = now();
   /* fixed delta for debugging */
   let time =
-    physics.dynamicTimestep ?
-      time :
-      physics.clock +. 16.667 *. physics.timeScale *. physics.simulationRate;
+    physics.dynamicTimestep
+      ? time
+      : physics.clock +. 16.667 *. physics.timeScale *. physics.simulationRate;
   let delta = time -. physics.clock;
   /* sufficient change. */
   if (delta > 0.0) {
