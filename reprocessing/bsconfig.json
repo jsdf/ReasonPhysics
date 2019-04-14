@@ -1,0 +1,26 @@
+{
+  "name": "reprocessing-demo",
+  "sources": "src",
+  "bs-dependencies": ["reprocessing", "reason-physics"],
+  "entries": [
+    {
+      "backend": "bytecode",
+      "main-module": "IndexHot"
+    },
+    {
+      "backend": "native",
+      "main-module": "Index"
+    },
+    {
+      "backend": "js",
+      "main-module": "Index"
+    }
+  ],
+  "bsc-flags": ["-bs-g"],
+  "suffix": ".bs.js",
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "refmt": 3
+}

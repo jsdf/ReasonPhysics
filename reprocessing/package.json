@@ -1,0 +1,27 @@
+{
+  "name": "reprocessing-demo",
+  "scripts": {
+    "start": "./lib/bs/bytecode/indexhot.byte",
+    "start:native": "./lib/bs/native/index.native",
+    "build": "bsb -make-world",
+    "build:web": "bsb -make-world -backend js",
+    "watch:web": "bsb -make-world -w -backend js",
+    "build:native": "bsb -make-world -backend native",
+    "server": "webpack-dev-server --open",
+    "sync": "rm -rf node_modules/reason-physics/; yarn add file:../reason-physics/",
+    "clean": "bsb -clean-world"
+  },
+  "dependencies": {
+    "reason-physics": "file:../reason-physics/",
+    "reprocessing": "0.2.0"
+  },
+  "devDependencies": {
+    "bsb-native": "4.0.7000",
+    "css-loader": "^2.1.1",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1"
+  }
+}
