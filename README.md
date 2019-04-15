@@ -2,7 +2,7 @@
 
 A simple 2d physics engine written in ReasonML. Heavily inspired by [Coffee Physics](https://github.com/soulwire/Coffee-Physics).
 
-See the [in-browser demo](https://jsdf.github.io/ReasonPhysics/) and the [demo source](https://github.com/jsdf/ReasonPhysics/blob/master/reason-physics/src/DemoGravity.re).
+See the [in-browser demo](https://jsdf.github.io/ReasonPhysics/) and the [demo source](https://github.com/jsdf/ReasonPhysics/blob/master/react-demo/src/DemoGravity.re#L141-L229).
 
 ## to build the react demo
 
