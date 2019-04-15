@@ -1,0 +1,1 @@
+[@bs.val] [@bs.scope "Date"] external now: unit => float = "now";

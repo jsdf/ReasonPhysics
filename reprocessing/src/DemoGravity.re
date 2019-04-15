@@ -98,8 +98,6 @@ let mouseMove = (state, env) => {
 let draw = (state, env) => {
   let {demoState, physics, bodies} = state;
 
-  print_endline("draw");
-
   ReasonPhysics.Physics.step(physics, bodies);
 
   // render

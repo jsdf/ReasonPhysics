@@ -72,9 +72,10 @@ let collision = (pool: array(Body.body)) => {
     let length = Array.length(pool);
     let j = ref(0);
     while (j^ < length) {
-      let otherBody = pool[j^];
+      let otherBody: Body.body = pool[j^];
       j := j^ + 1;
-      if (body != otherBody) {
+
+      if (body !== otherBody) {
         Vec2d.copy(delta, otherBody.position);
         Vec2d.sub(delta, body.position);
         let distanceSquared = Vec2d.magSq(delta);

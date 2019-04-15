@@ -1,5 +1,5 @@
-[@bs.val] [@bs.scope "Date"] external now: unit => float = "now";
-// let now = () => Unix.gettimeofday() *. 1000.0;
+let now = Platform.now;
+// [@bs.val] [@bs.scope "Date"] external now: unit => float = "now";
 
 type physicsState = {
   mutable accumulatedTime: float,

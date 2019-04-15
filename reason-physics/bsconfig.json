@@ -1,10 +1,25 @@
 {
   "name": "reason-physics",
-  "sources": {
-    "dir": "src",
-    "public": ["Behaviour", "Body", "Physics", "Vec2d"],
-    "subdirs": true
-  },
+  "sources": [
+    {
+      "dir": "src",
+      "public": ["Behaviour", "Body", "Physics", "Vec2d"],
+      "subdirs": [
+        {
+          "dir": "native",
+          "backend": ["native", "bytecode"]
+        },
+        {
+          "dir": "web",
+          "backend": ["js"]
+        }
+      ]
+    },
+    {
+      "dir": "test",
+      "type": "dev"
+    }
+  ],
   "package-specs": [
     {
       "module": "commonjs"
@@ -13,6 +28,7 @@
       "module": "es6"
     }
   ],
+  "ppx-flags": ["matchenv/matchenv"],
 
   "suffix": ".bs.js",
   "namespace": true,

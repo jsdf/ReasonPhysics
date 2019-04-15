@@ -12,8 +12,10 @@
   ],
   "author": "",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "matchenv": "github:bsansouci/matchenv"
+  },
   "devDependencies": {
-    "bs-platform": "^4.0.5"
+    "bsb-native": "4.0.7000"
   }
 }
